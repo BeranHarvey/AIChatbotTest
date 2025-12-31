@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>RAG Chatbot</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 40px auto;
+    }
+    #chat {
+      border: 1px solid #ccc;
+      padding: 10px;
+      height: 400px;
+      overflow-y: auto;
+      margin-bottom: 10px;
+    }
+    .user {
+      font-weight: bold;
+    }
+    .bot {
+      margin-left: 20px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>RAG Chatbot</h2>
+
+  <div id="chat"></div>
+
+  <input id="query" type="text" placeholder="Ask a question..." style="width: 80%;" />
+  <button onclick="send()">Send</button>
+
+  <script>
+    async function send() {
+      const input = document.getElementById("query");
+      const chat = document.getElementById("chat");
+      const question = input.value.trim();
+
+      if (!question) return;
+
+      // Display user message
+      chat.innerHTML += `<div class="user">You: ${question}</div>`;
+      input.value = "";
+
+      // Create bot div
+      const botDiv = document.createElement("div");
+      botDiv.className = "bot";
+      chat.appendChild(botDiv);
+
+      // Start with Bot label
+      botDiv.innerHTML = `<strong>Bot:</strong> `;
+
+      // Fetch streaming response
+      const response = await fetch("http://127.0.0.1:8000/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query: question })
+      });
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let firstChunk = true;
+
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        const chunk = decoder.decode(value, { stream: true });
+
+        // Append chunk without overwriting label
+        botDiv.innerHTML += chunk;
+
+        // Scroll to bottom
+        chat.scrollTop = chat.scrollHeight;
+      }
+    }
+
+  </script>
+
+</body>
+</html>
