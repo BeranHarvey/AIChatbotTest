@@ -38,7 +38,9 @@ def rag_query(user_query):
 
     # System prompt + context
     prompt = f"""
-You are an expert AI assistant in answering questions based on only the information provided inthe following context.
+You are an expert AI assistant in answering questions based on only the information provided in the following context.
+Do NOT include any <think> or internal reasoning blocks in your output.
+Provide only the final answer to the user.
 Remain factual and concise, do not try to guess or add external information.
 If the answer is not explicitly stated in the context, say "I don't know based on the documents provided."
 
