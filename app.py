@@ -3,8 +3,14 @@ from pydantic import BaseModel
 from rag import rag_query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
+from fastapi.responses import HTMLResponse
 
 app = FastAPI()
+
+@app.get("/", response_class=HTMLResponse)
+def index():
+    with open("chat_ui.html") as f:
+        return f.read()
 
 app.add_middleware(
     CORSMiddleware,
