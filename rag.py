@@ -51,7 +51,7 @@ Answer:
 
     # Call LM Studio
     response = client.chat.completions.create(
-        model="Qwen3-14B-MLX-4bit",
+        model="qwen3-14b-mlx",
         messages=[
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": prompt}
