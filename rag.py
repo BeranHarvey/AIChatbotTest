@@ -72,5 +72,8 @@ if __name__ == "__main__":
         q = input("\n❓ You: ")
         if q.lower() in ("quit", "exit"):
             break
-        answer = rag_query(q)
-        print("\n🤖 AI:", answer)
+        
+        print("\n🤖 Bot: ", end="", flush=True)
+        for token in rag_query(q):
+            print(token, end="", flush=True)
+        print()
