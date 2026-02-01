@@ -1,6 +1,7 @@
 import os
 import glob
 import chromadb
+import urllib.parse
 
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from sentence_transformers import SentenceTransformer
@@ -50,14 +51,14 @@ for path in glob.glob(os.path.join(docs_path, "*")):
     if text:
         documents.append({
             "text": text,
-            "source": os.path.basename(path)
+            "source": urllib.parse.unquote(os.path.basename(path))
         })
 
 print(f"Loaded {len(documents)} documents")
 
 # Chunking
 splitter = RecursiveCharacterTextSplitter(
-    chunk_size=800,
+    chunk_size=1200,
     chunk_overlap=150
 )
 
@@ -81,7 +82,8 @@ for i, chunk in enumerate(chunks):
     collection.add(
         ids=[f"chunk_{i}"],
         documents=[chunk["text"]],
-        embeddings=[emb]
+        embeddings=[emb],
+        metadatas=[{"source": chunk["source"]}]
     )
 
 print(f"Ingestion complete: {len(chunks)} chunks added.")

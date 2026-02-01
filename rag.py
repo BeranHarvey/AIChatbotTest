@@ -36,21 +36,26 @@ def rag_query(user_query):
         n_results=5
     )
     retrieved_docs = results["documents"][0]
+    sources = results.get("metadatas", [[]])[0]
     
     # Build context block
-    context = "\n\n".join(retrieved_docs)
+    context = "\n\n".join([f"[Source: {meta.get('source', 'Unknown')}]\n{doc}" 
+                        for doc, meta in zip(retrieved_docs, sources)])
     
     # System prompt + context
     prompt = f"""
-You are an expert AI assistant in answering questions based on only the information provided in the following context.
-Provide only the final answer to the user.
-Remain factual and concise, do not try to guess or add external information.
-If the answer is not explicitly stated in the context, say "I don't know based on the documents provided."
+You are a medical device quality management systems assistant. Answer based ONLY on the provided regulatory documents.
+
+IMPORTANT:
+- Cite the document name when answering
+- If uncertain, say "I don't have enough information in the documents"
+- For regulatory requirements, quote exact text when possible
 
 Context:
 {context}
 
-User question: {user_query}
+User question: 
+{user_query}
 
 Answer:
 """
@@ -75,9 +80,14 @@ Answer:
     
     # Strip think blocks from complete response
     cleaned_response = strip_think_blocks(full_response)
+
+    # Extract unique source documents
+    unique_sources = list(set([meta.get('source', 'Unknown') for meta in sources]))
+    source_list = "\n".join([f"- {src}" for src in unique_sources])
+    final_output = f"{cleaned_response}\n\n---\nSources:\n{source_list}"
     
     # Yield the cleaned result
-    yield cleaned_response
+    yield final_output
 
 # Simple CLI test
 if __name__ == "__main__":
