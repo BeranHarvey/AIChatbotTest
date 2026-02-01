@@ -33,7 +33,7 @@ def rag_query(user_query):
     # Retrieve top-k documents
     results = collection.query(
         query_embeddings=[query_embedding],
-        n_results=5
+        n_results=3
     )
     retrieved_docs = results["documents"][0]
     sources = results.get("metadatas", [[]])[0]
@@ -86,7 +86,7 @@ Answer:
     # Extract unique source documents
     unique_sources = list(set([meta.get('source', 'Unknown') for meta in sources]))
     source_list = "\n".join([f"- {src}" for src in unique_sources])
-    final_output = f"{cleaned_response}\n\Sources:\n{source_list}"
+    final_output = f"{cleaned_response}\n\nSources:\n{source_list}"
     
     # Yield the cleaned result
     yield final_output

@@ -58,7 +58,7 @@ print(f"Loaded {len(documents)} documents")
 
 # Chunking
 splitter = RecursiveCharacterTextSplitter(
-    chunk_size=1200,
+    chunk_size=800,
     chunk_overlap=150
 )
 
