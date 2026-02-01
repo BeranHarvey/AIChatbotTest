@@ -33,7 +33,7 @@ def rag_query(user_query):
     # Retrieve top-k documents
     results = collection.query(
         query_embeddings=[query_embedding],
-        n_results=3
+        n_results=5
     )
     retrieved_docs = results["documents"][0]
     sources = results.get("metadatas", [[]])[0]
@@ -70,6 +70,7 @@ Answer:
             {"role": "user", "content": prompt}
         ],
         temperature=0.1,
+        max_tokens=1024,
         stream=True
     )
     
