@@ -44,12 +44,14 @@ def rag_query(user_query):
     
     # System prompt + context
     prompt = f"""
-You are a medical device quality management systems assistant. Answer based ONLY on the provided regulatory documents.
+You are a helpful medical device QMS assistant. Answer questions based on the provided regulatory documents.
 
-IMPORTANT:
-- Cite the document name when answering
-- If uncertain, say "I don't have enough information in the documents"
-- For regulatory requirements, quote exact text when possible
+IMPORTANT RULES:
+- Write in clear, natural prose - NO bullet points, numbered lists, or excessive formatting
+- Explain things clearly and concisely
+- Do NOT include document reference markers like (a), (b), Article numbers, or asterisks
+- Do NOT mention source document names in your answer (sources will be added automatically)
+- If you don't know based on the documents, say so clearly
 
 Context:
 {context}
@@ -84,7 +86,7 @@ Answer:
     # Extract unique source documents
     unique_sources = list(set([meta.get('source', 'Unknown') for meta in sources]))
     source_list = "\n".join([f"- {src}" for src in unique_sources])
-    final_output = f"{cleaned_response}\n\n---\nSources:\n{source_list}"
+    final_output = f"{cleaned_response}\n\Sources:\n{source_list}"
     
     # Yield the cleaned result
     yield final_output
