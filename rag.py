@@ -34,7 +34,7 @@ def rag_query(user_query):
     try: 
         # Check collection has docs
         collection_count = collection.count()
-        if collection_count["documents"] == 0:
+        if collection_count == 0:
             yield "No documents found in the vector database. Please add documents first."
             return
 
