@@ -22,28 +22,53 @@ client = OpenAI(
 embedder = SentenceTransformer("intfloat/e5-large-v2")
 
 # Connect to Chroma vector DB
-chroma_client = chromadb.PersistentClient(path="chroma_db")
-collection = chroma_client.get_or_create_collection("my_docs")
+try: 
+    chroma_client = chromadb.PersistentClient(path="chroma_db")
+    collection = chroma_client.get_or_create_collection("my_docs")
+except Exception as e:
+    print("Error connecting to Chroma DB:", e)
+    raise
 
 # RAG function
 def rag_query(user_query):
-    # Embed query
-    query_embedding = embedder.encode(f"query: {user_query}").tolist()
-    
-    # Retrieve top-k documents
-    results = collection.query(
-        query_embeddings=[query_embedding],
-        n_results=5
-    )
-    retrieved_docs = results["documents"][0]
-    sources = results.get("metadatas", [[]])[0]
-    
-    # Build context block
-    context = "\n\n".join([f"[Source: {meta.get('source', 'Unknown')}]\n{doc}" 
-                        for doc, meta in zip(retrieved_docs, sources)])
-    
-    # System prompt + context
-    prompt = f"""
+    try: 
+        # Check collection has docs
+        collection_count = collection.count()
+        if collection_count["documents"] == 0:
+            yield "No documents found in the vector database. Please add documents first."
+            return
+
+        # Embed query
+        try:
+            query_embedding = embedder.encode(f"query: {user_query}").tolist()
+        except Exception as e:
+            yield f"Error generating embedding for the query: {e}"
+            return
+        
+        # Retrieve top-k documents
+        try: 
+            results = collection.query(
+                query_embeddings=[query_embedding],
+                n_results=5
+            )
+        except Exception as e:
+            yield f"Error querying the vector database: {e}"
+            return
+
+        retrieved_docs = results["documents"][0]
+        sources = results.get("metadatas", [[]])[0]
+
+        # Check if any results were found
+        if not retrieved_docs or all(not doc.strip() for doc in retrieved_docs):
+            yield "No relevant documents found for the query."
+            return
+        
+        # Build context block
+        context = "\n\n".join([f"[Source: {meta.get('source', 'Unknown')}]\n{doc}" 
+                            for doc, meta in zip(retrieved_docs, sources)])
+        
+        # System prompt + context
+        prompt = f"""
 You are a helpful medical device QMS assistant. Answer questions based on the provided regulatory documents.
 
 IMPORTANT RULES:
@@ -61,36 +86,59 @@ User question:
 
 Answer:
 """
-    
-    # Call LM Studio
-    response = client.chat.completions.create(
-        model="qwen3-14b-mlx",
-        messages=[
-            {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": prompt}
-        ],
-        temperature=0.1,
-        max_tokens=1024,
-        stream=True
-    )
-    
-    # Buffer the full response first
-    full_response = ""
-    for chunk in response:
-        delta = chunk.choices[0].delta
-        if hasattr(delta, "content") and delta.content:
-            full_response += delta.content
-    
-    # Strip think blocks from complete response
-    cleaned_response = strip_think_blocks(full_response)
+        
+        # Call LM Studio
+        try:
+            response = client.chat.completions.create(
+                model="qwen3-14b-mlx",
+                messages=[
+                    {"role": "system", "content": "You are a helpful assistant."},
+                    {"role": "user", "content": prompt}
+                ],
+                temperature=0.1,
+                max_tokens=1024,
+                stream=True,
+                timeout=120
+            )
+        except Exception as e:
+            error_msg = str(e).lower()
+            if "connection" in error_msg or "refused" in error_msg:
+                yield "Error: Unable to connect to the LLM server. Please ensure it is running."
+            elif "timeout" in error_msg:
+                yield "Error: The request to the LLM server timed out. Please try again."
+            else:
+                yield f"Error during LLM request: {e}"
+            return
+        
+        # Buffer the full response first
+        full_response = ""
+        try: 
+            for chunk in response:
+                delta = chunk.choices[0].delta
+                if hasattr(delta, "content") and delta.content:
+                    full_response += delta.content
+        except Exception as e:
+            if full_response:
+                yield f"\n\n[Partial response received before error]\n{full_response}\n\nError during streaming: {e}"
+            else:
+                yield f"Error during streaming response: {e}"
+            return
+        
+        # Strip think blocks from complete response
+        cleaned_response = strip_think_blocks(full_response)
 
-    # Extract unique source documents
-    unique_sources = list(set([meta.get('source', 'Unknown') for meta in sources]))
-    source_list = "\n".join([f"- {src}" for src in unique_sources])
-    final_output = f"{cleaned_response}\n\nSources:\n{source_list}"
-    
-    # Yield the cleaned result
-    yield final_output
+        # Extract unique source documents
+        unique_sources = list(set([meta.get('source', 'Unknown') for meta in sources]))
+        source_list = "\n".join([f"- {src}" for src in unique_sources])
+
+        # Append sources to response
+        final_output = f"{cleaned_response}\n\nSources:\n{source_list}"
+        
+        # Yield the cleaned result
+        yield final_output
+
+    except Exception as e:
+        yield f"An unexpected error occurred: {e}"
 
 # Simple CLI test
 if __name__ == "__main__":
@@ -100,6 +148,12 @@ if __name__ == "__main__":
         if q.lower() in ("quit", "exit"):
             break
         print("\n Bot: ", end="", flush=True)
-        for token in rag_query(q):
-            print(token, end="", flush=True)
+        try:
+            for token in rag_query(q):
+                print(token, end="", flush=True)
+        except KeyboardInterrupt:
+            print("\nInterrupted by user")
+            break
+        except Exception as e:
+            print(f"\nError: {e}")
         print()
