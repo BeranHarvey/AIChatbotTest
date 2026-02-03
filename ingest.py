@@ -123,7 +123,7 @@ try:
     # Clear existing collection
     existing_count = collection.count()
     if existing_count > 0:
-        client.delete(collection_name)
+        client.delete_collection(collection_name)
         collection = client.create_collection(collection_name)
 except Exception as e:
     print("Error connecting to Chroma DB:", e)
