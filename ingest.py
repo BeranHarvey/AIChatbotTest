@@ -139,7 +139,7 @@ try:
             embeddings=[emb],
             metadatas=[{"source": chunk["source"]}]
         )
-        print(f"Ingestion complete: {len(chunks)} chunks added.")
+    print(f"Ingestion complete: {len(chunks)} chunks added.")
 except Exception as e:
     print("Error during embedding insertion:", e)
     exit(1)
