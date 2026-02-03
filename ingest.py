@@ -143,3 +143,6 @@ try:
 except Exception as e:
     print("Error during embedding insertion:", e)
     exit(1)
+
+import sys
+sys.exit(0)
