@@ -18,7 +18,7 @@ Built for medical device engineering teams to quickly access information from re
 
 ## Architecture
 
-User Query → FastAPI → RAG Logic → Vector DB (ChromaDB) → LLM (Qwen3) → Response
+User Query → FastAPI → RAG Logic → Vector DB (ChromaDB) → LLM (Llama 3.2) → Response
 
 **Components:**
 
@@ -26,7 +26,7 @@ User Query → FastAPI → RAG Logic → Vector DB (ChromaDB) → LLM (Qwen3) �
 - **Backend**: FastAPI server
 - **Vector Database**: ChromaDB for semantic search
 - **Embeddings**: Sentence Transformers (e5-large-v2)
-- **LLM**: Qwen3-14B via LM Studio (local inference)
+- **LLM**: Qwen-3.2-3B-Instruct via LM Studio (local inference)
 
 ## Usage
 
@@ -88,7 +88,7 @@ results = collection.query(
 ## Acknowledgments
 
 - Built with [LM Studio](https://lmstudio.ai/)
-- Powered by [Qwen3](https://qwenlm.github.io/) language model
+- Powered by [Llama 3.2](https://qwenlm.github.io/) language model
 - Uses [ChromaDB](https://www.trychroma.com/) vector database
 - Embeddings by [Sentence Transformers](https://www.sbert.net/)
 
