@@ -91,7 +91,7 @@ Answer:
         # Call LM Studio
         try:
             response = client.chat.completions.create(
-                model="qwen3-14b-mlx",
+                model="llama-3.2-3b-instruct",
                 messages=[
                     {"role": "system", "content": "You are a helpful assistant."},
                     {"role": "user", "content": prompt}
