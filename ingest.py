@@ -86,9 +86,11 @@ for path in file_paths:
     print(f"Loading document: {filename}")
     text = load_document(path)
     if text:
+        decoded_filename = urllib.parse.unquote(filename)
+
         documents.append({
             "text": text,
-            "source": urllib.parse.unquote(filename),
+            "source": decoded_filename,
             "filepath": os.path.abspath(path)
         })
 
@@ -140,7 +142,7 @@ try:
             ids=[f"chunk_{i}"],
             documents=[chunk["text"]],
             embeddings=[emb],
-            metadatas=[{"source": chunk["source"]}]
+            metadatas=[{"source": chunk["source"], "filepath": chunk["filepath"]}]
         )
     print(f"Ingestion complete: {len(chunks)} chunks added.")
 except Exception as e:

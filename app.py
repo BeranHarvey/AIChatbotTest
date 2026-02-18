@@ -1,9 +1,12 @@
+from fileinput import filename
+import urllib
+import os
+import logging
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from rag import rag_query
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import StreamingResponse, HTMLResponse
-import logging
+from fastapi.responses import FileResponse, StreamingResponse, HTMLResponse
 
 # config logging
 logging.basicConfig(level=logging.INFO)
@@ -18,6 +21,30 @@ def index():
             return f.read()
     except FileNotFoundError:
         raise HTTPException(status_code=500, detail="chat_ui.html not found")
+    
+@app.get("/documents/{filename}")
+def get_document(filename: str):
+    """Serve documents from the docs folder"""
+
+    print(f"DEBUG: Requested filename: {filename}")
+
+    filepath = os.path.join("docs", filename)
+    print(f"DEBUG: Looking for file at: {filepath}")
+
+    if not os.path.exists(filepath):
+        encoded_filename = urllib.parse.quote(filename, safe="")
+        encoded_filepath = os.path.join("docs", encoded_filename)
+        print(f"DEBUG: Trying encoded path: {encoded_filepath}")
+
+        if os.path.exists(encoded_filepath):
+            return FileResponse(encoded_filepath, filename=filename)
+        else:
+            actual_files = os.listdir("docs")
+            print(f"DEBUG: Files in docs/: {actual_files}")
+            raise HTTPException(status_code=404, detail=f"Document not found: {filename}")
+
+    return FileResponse(encoded_filepath, filename=filename)
+        
 
 app.add_middleware(
     CORSMiddleware,

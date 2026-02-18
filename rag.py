@@ -5,6 +5,7 @@ from openai import OpenAI
 from sentence_transformers import SentenceTransformer
 import chromadb
 import re
+import urllib.parse
 
 def strip_think_blocks(text: str) -> str:
     """
@@ -132,17 +133,17 @@ Answer:
         seen = set()
         for meta in sources:
             source_name = meta.get('source', 'Unknown')
-            filepath = meta.get('filepath', None)
             
             if source_name not in seen:
                 seen.add(source_name)
                 
-                # Create file:// URL for local access
-                if filepath:
-                    file_url = f"file://{filepath}"
-                    source_info.append(f"- [{source_name}]({file_url})")
-                else:
-                    source_info.append(f"- {source_name}")
+                # Use server URL
+                encoded_name = urllib.parse.quote(source_name)
+                doc_url = f"http://localhost:8000/documents/{encoded_name}"
+                
+                # Display name can be decoded for readability
+                display_name = urllib.parse.unquote(source_name)
+                source_info.append(f"- [{display_name}]({doc_url})")
 
         source_list = "\n".join(source_info)
 
