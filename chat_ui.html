@@ -5,207 +5,214 @@
 <title>QMS Document Assistant</title>
 <style>
 body {
-font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-background: #f5f7fa;
-margin: 0;
-height: 100vh;
-display: flex;
-justify-content: center;
-align-items: center;
-  }
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  background: #f5f7fa;
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .chat-container {
-width: 100%;
-max-width: 900px;
-height: 90vh;
-background: white;
-border-radius: 12px;
-display: flex;
-flex-direction: column;
-box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-  }
+  width: 100%;
+  max-width: 900px;
+  height: 90vh;
+  background: white;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
 .header {
-padding: 16px 20px;
-border-bottom: 1px solid #e5e7eb;
-display: flex;
-justify-content: space-between;
-align-items: center;
-  }
+  padding: 16px 20px;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 .header-title {
-font-size: 18px;
-font-weight: 600;
-color: #111827;
-  }
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+}
 .header-subtitle {
-font-size: 13px;
-color: #6b7280;
-font-weight: 400;
-margin-top: 2px;
-  }
+  font-size: 13px;
+  color: #6b7280;
+  font-weight: 400;
+  margin-top: 2px;
+}
 .clear-btn {
-background: #ef4444;
-color: white;
-border: none;
-border-radius: 6px;
-padding: 8px 16px;
-font-size: 14px;
-cursor: pointer;
-font-weight: 500;
-  }
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 500;
+}
 .clear-btn:hover {
-background: #dc2626;
-  }
+  background: #dc2626;
+}
 #chat {
-flex: 1;
-padding: 20px;
-overflow-y: auto;
-background: #fafafa;
-  }
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  background: #fafafa;
+}
 .message {
-max-width: 75%;
-padding: 12px 16px;
-margin-bottom: 12px;
-border-radius: 16px;
-line-height: 1.4;
-white-space: pre-wrap;
-  }
+  max-width: 75%;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  border-radius: 16px;
+  line-height: 1.4;
+  white-space: pre-wrap;
+}
 .user {
-margin-left: auto;
-background: #2563eb;
-color: white;
-border-bottom-right-radius: 4px;
-  }
+  margin-left: auto;
+  background: #2563eb;
+  color: white;
+  border-bottom-right-radius: 4px;
+}
 .bot {
-margin-right: auto;
-background: #e5e7eb;
-color: #111827;
-border-bottom-left-radius: 4px;
-  }
+  margin-right: auto;
+  background: #e5e7eb;
+  color: #111827;
+  border-bottom-left-radius: 4px;
+}
 .typing {
 font-style: italic;
 opacity: 0.7;
   }
 .input-area {
-display: flex;
-padding: 16px;
-border-top: 1px solid #e5e7eb;
-gap: 10px;
-  }
+  display: flex;
+  padding: 16px;
+  border-top: 1px solid #e5e7eb;
+  gap: 10px;
+}
 #query {
-flex: 1;
-padding: 12px 14px;
-border-radius: 8px;
-border: 1px solid #d1d5db;
-font-size: 15px;
-  }
+  flex: 1;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 15px;
+}
 #query:focus {
-outline: none;
-border-color: #2563eb;
-  }
+  outline: none;
+  border-color: #2563eb;
+}
 button {
-background: #2563eb;
-color: white;
-border: none;
-border-radius: 8px;
-padding: 0 18px;
-font-size: 15px;
-cursor: pointer;
-  }
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0 18px;
+  font-size: 15px;
+  cursor: pointer;
+}
 button:hover {
-background: #1d4ed8;
-  }
+  background: #1d4ed8;
+}
 .footer {
-padding: 12px 20px;
-border-top: 1px solid #e5e7eb;
-background: #f9fafb;
-font-size: 12px;
-color: #6b7280;
-text-align: center;
-line-height: 1.5;
-border-bottom-left-radius: 12px;
-border-bottom-right-radius: 12px;
-  }
+  padding: 12px 20px;
+  border-top: 1px solid #e5e7eb;
+  background: #f9fafb;
+  font-size: 12px;
+  color: #6b7280;
+  text-align: center;
+  line-height: 1.5;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
 .footer-icon {
-display: inline-block;
-margin-right: 4px;
-  }
+  display: inline-block;
+  margin-right: 4px;
+}
 </style>
 </head>
 <body>
 <div class="chat-container">
-<div class="header">
-<div>
-<div class="header-title">🏥 QMS Document Assistant</div>
-<div class="header-subtitle">Medical Device Quality & Regulatory Support</div>
-</div>
-<button class="clear-btn" onclick="clearChat()">Clear Chat</button>
-</div>
-<div id="chat"></div>
-<div class="input-area">
-<input
-id="query"
-type="text"
-placeholder="Ask a question about quality management or regulatory documents…"
-onkeydown="if(event.key==='Enter') send()"
-/>
-<button onclick="send()">Send</button>
-</div>
-<div class="footer">
-<span class="footer-icon">⚠️</span>
-<strong>Important:</strong> This is an AI assistant for informational purposes only. 
-Always verify critical regulatory information with official source documents before making decisions.
-</div>
+  <div class="header">
+    <div>
+      <div class="header-title">QMS Document Assistant</div>
+      <div class="header-subtitle">Medical Device Quality & Regulatory Support</div>
+    </div>
+    <button class="clear-btn" onclick="clearChat()">Clear Chat</button>
+  </div>
+  <div id="chat"></div>
+  <div class="input-area">
+    <input
+      id="query"
+      type="text"
+      placeholder="Ask a question about quality management or regulatory documents…"
+      onkeydown="if(event.key==='Enter') send()"
+    />
+    <button onclick="send()">Send</button>
+  </div>
+  <div class="footer">
+    <span class="footer-icon">⚠️</span>
+    <strong>Important:</strong> This is an AI assistant for informational purposes only. 
+    Always verify critical regulatory information with official source documents before making decisions.
+  </div>
 </div>
 <script>
 function clearChat() {
-const chat = document.getElementById("chat");
-if (confirm("Clear all chat history?")) {
-chat.innerHTML = "";
+  const chat = document.getElementById("chat");
+  if (confirm("Clear all chat history?")) {
+    chat.innerHTML = "";
   }
 }
 
+function convertMarkdownLinks(text) {
+  const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
+  return text.replace(linkRegex, '<a href="$2" target="_blank" style="color: #2563eb; text-decoration: underline;">$1 </a>');
+}
+
 async function send() {
-const input = document.getElementById("query");
-const chat = document.getElementById("chat");
-const question = input.value.trim();
-if (!question) return;
+  const input = document.getElementById("query");
+  const chat = document.getElementById("chat");
+  const question = input.value.trim();
+  if (!question) return;
 
-// User bubble
-const userDiv = document.createElement("div");
-userDiv.className = "message user";
-userDiv.textContent = question;
-chat.appendChild(userDiv);
-input.value = "";
-chat.scrollTop = chat.scrollHeight;
+  // User bubble
+  const userDiv = document.createElement("div");
+  userDiv.className = "message user";
+  userDiv.textContent = question;
+  chat.appendChild(userDiv);
+  input.value = "";
+  chat.scrollTop = chat.scrollHeight;
 
-// Bot bubble
-const botDiv = document.createElement("div");
-botDiv.className = "message bot typing";
-botDiv.textContent = "Searching documents…";
-chat.appendChild(botDiv);
-chat.scrollTop = chat.scrollHeight;
+  // Bot bubble
+  const botDiv = document.createElement("div");
+  botDiv.className = "message bot typing";
+  botDiv.textContent = "Searching documents…";
+  chat.appendChild(botDiv);
+  chat.scrollTop = chat.scrollHeight;
 
-const response = await fetch("/chat", {
-method: "POST",
-headers: { "Content-Type": "application/json" },
-body: JSON.stringify({ query: question })
+  const response = await fetch("/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ query: question })
   });
 
-const reader = response.body.getReader();
-const decoder = new TextDecoder();
-let started = false;
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let started = false;
 
-while (true) {
-const { value, done } = await reader.read();
-if (done) break;
-const chunk = decoder.decode(value, { stream: true });
-if (!started) {
-botDiv.textContent = "";
-botDiv.classList.remove("typing");
-started = true;
+  while (true) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    const chunk = decoder.decode(value, { stream: true });
+    if (!started) {
+      botDiv.textContent = "";
+      botDiv.classList.remove("typing");
+      started = true;
     }
-botDiv.textContent += chunk;
-chat.scrollTop = chat.scrollHeight;
+    botDiv.textContent += chunk;
+    chat.scrollTop = chat.scrollHeight;
   }
+
+  botDiv.innerHTML = convertMarkdownLinks(botDiv.textContent);
 }
 </script>
 </body>

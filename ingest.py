@@ -88,7 +88,8 @@ for path in file_paths:
     if text:
         documents.append({
             "text": text,
-            "source": urllib.parse.unquote(filename)
+            "source": urllib.parse.unquote(filename),
+            "filepath": os.path.abspath(path)
         })
 
 if not documents:
@@ -105,10 +106,12 @@ try:
     )
     chunks = []
     for doc in documents:
-        for chunk in splitter.split_text(doc["text"]):
+        doc_chunks = splitter.split_text(doc["text"])
+        for chunk in doc_chunks:
             chunks.append({
                 "text": chunk,
-                "source": doc["source"]
+                "source": doc["source"],
+                "filepath": doc["filepath"]
             })
     print(f"Created {len(chunks)} chunks")
 except Exception as e:

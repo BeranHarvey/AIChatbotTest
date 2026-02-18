@@ -127,9 +127,24 @@ Answer:
         # Strip think blocks from complete response
         cleaned_response = strip_think_blocks(full_response)
 
-        # Extract unique source documents
-        unique_sources = list(set([meta.get('source', 'Unknown') for meta in sources]))
-        source_list = "\n".join([f"- {src}" for src in unique_sources])
+        # Extract unique source documents with file paths
+        source_info = []
+        seen = set()
+        for meta in sources:
+            source_name = meta.get('source', 'Unknown')
+            filepath = meta.get('filepath', None)
+            
+            if source_name not in seen:
+                seen.add(source_name)
+                
+                # Create file:// URL for local access
+                if filepath:
+                    file_url = f"file://{filepath}"
+                    source_info.append(f"- [{source_name}]({file_url})")
+                else:
+                    source_info.append(f"- {source_name}")
+
+        source_list = "\n".join(source_info)
 
         # Append sources to response
         final_output = f"{cleaned_response}\n\nSources:\n{source_list}"
