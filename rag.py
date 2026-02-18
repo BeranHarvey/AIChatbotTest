@@ -50,7 +50,7 @@ def rag_query(user_query):
         try: 
             results = collection.query(
                 query_embeddings=[query_embedding],
-                n_results=5
+                n_results=3
             )
         except Exception as e:
             yield f"Error querying the vector database: {e}"
@@ -97,7 +97,7 @@ Answer:
                     {"role": "user", "content": prompt}
                 ],
                 temperature=0.1,
-                max_tokens=1024,
+                max_tokens=768,
                 stream=True,
                 timeout=120
             )
