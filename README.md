@@ -26,7 +26,7 @@ User Query → FastAPI → RAG Logic → Vector DB (ChromaDB) → LLM (Llama 3.2
 - **Backend**: FastAPI server
 - **Vector Database**: ChromaDB for semantic search
 - **Embeddings**: Sentence Transformers (e5-large-v2)
-- **LLM**: Qwen-3.2-3B-Instruct via LM Studio (local inference)
+- **LLM**: llama-3.2-3b-instruct via LM Studio (local inference)
 
 ## Usage
 
