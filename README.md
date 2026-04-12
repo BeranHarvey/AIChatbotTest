@@ -197,7 +197,7 @@ AIChatbotTest/
 - Error handling with proper HTTP status codes
 
 **Configuration:**
-- Port: 8000 (change with `uvicorn app:app --port 9000`)
+- Port: 8000
 - Reload mode: Development convenience feature
 
 ### `rag.py` - RAG Pipeline
