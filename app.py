@@ -14,6 +14,7 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
+# Open the chat UI
 @app.get("/", response_class=HTMLResponse)
 def index():
     try:
@@ -22,6 +23,7 @@ def index():
     except FileNotFoundError:
         raise HTTPException(status_code=500, detail="chat_ui.html not found")
     
+# Endpoint to serve documents
 @app.get("/documents/{filename}")
 def get_document(filename: str):
     """Serve documents from the docs folder"""
@@ -45,7 +47,7 @@ def get_document(filename: str):
 
     return FileResponse(encoded_filepath, filename=filename)
         
-
+# Chat endpoint
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -57,6 +59,7 @@ app.add_middleware(
 class ChatRequest(BaseModel):
     query: str
 
+# Chat endpoint implementation
 @app.post("/chat")
 def chat(chat_request: ChatRequest):
     if not chat_request.query.strip():
@@ -75,6 +78,7 @@ def chat(chat_request: ChatRequest):
             
     return StreamingResponse(event_generator(), media_type="text/plain")
 
+# RAG query endpoint (for testing)
 @app.get("/health")
 def health_check():
     """Health check endpoint."""

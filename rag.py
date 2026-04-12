@@ -7,6 +7,7 @@ import chromadb
 import re
 import urllib.parse
 
+# Post processing function strip think blocks from model output
 def strip_think_blocks(text: str) -> str:
     """
     Removes <think>...</think> blocks from model output.
@@ -68,7 +69,7 @@ def rag_query(user_query):
         context = "\n\n".join([f"[Source: {meta.get('source', 'Unknown')}]\n{doc}" 
                             for doc, meta in zip(retrieved_docs, sources)])
         
-        # System prompt + context
+        # System prompt and context
         prompt = f"""
 You are a helpful medical device QMS assistant. Answer questions based on the provided regulatory documents.
 
@@ -141,7 +142,7 @@ Answer:
                 encoded_name = urllib.parse.quote(source_name)
                 doc_url = f"http://localhost:8000/documents/{encoded_name}"
                 
-                # Display name can be decoded for readability
+                # Display name can be decoded for legibility
                 display_name = urllib.parse.unquote(source_name)
                 source_info.append(f"- [{display_name}]({doc_url})")
 

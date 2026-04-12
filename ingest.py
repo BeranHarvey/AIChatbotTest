@@ -7,7 +7,7 @@ from sentence_transformers import SentenceTransformer
 from docx import Document
 from pypdf import PdfReader
 
-# config 
+# set variables
 docs_path = "docs"
 chroma_path = "chroma_db"
 collection_name = "my_docs"
@@ -24,7 +24,7 @@ except Exception as e:
     print("Error loading embedding model:", e)
     exit(1)
 
-# Load text documents
+# Load txt documents function
 def load_txt(path):
     try:
         with open(path, "r", encoding="utf-8") as f:
@@ -32,7 +32,8 @@ def load_txt(path):
     except Exception as e:
         print(f"Error loading text file {path}: {e}")
         return None
-    
+
+# Load pdf documents function
 def load_pdf(path):
     try:
         reader = PdfReader(path)
@@ -49,6 +50,7 @@ def load_pdf(path):
         print(f"Error loading PDF file {path}: {e}")
         return None
 
+# Load word documents function
 def load_docx(path):
     try:
         doc = Document(path)
@@ -60,7 +62,8 @@ def load_docx(path):
     except Exception as e:
         print(f"Error loading DOCX file {path}: {e}")
         return None
-            
+
+# Load any documents function
 def load_document(path):
     if path.endswith(".txt"):
         return load_txt(path)
@@ -72,6 +75,7 @@ def load_document(path):
         print(f"Unsupported file format for file {path}. Skipping.")
         return None
 
+# Find documents in file path 
 documents = []
 file_paths = glob.glob(os.path.join(docs_path, "*"))
 
@@ -81,6 +85,7 @@ if not file_paths:
 
 print(f"Found {len(file_paths)} files in '{docs_path}'")
 
+# load in documents found in file path
 for path in file_paths:
     filename = os.path.basename(path)
     print(f"Loading document: {filename}")
@@ -100,7 +105,7 @@ if not documents:
 
 print(f"Loaded {len(documents)} documents")
 
-# Chunking
+# Chunking documents
 try:
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=800,
