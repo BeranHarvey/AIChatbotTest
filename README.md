@@ -337,7 +337,7 @@ In `ingest.py` (~line 105), adjust text chunking:
 ```python
 splitter = RecursiveCharacterTextSplitter(
     chunk_size=800,      # Increase for longer context per chunk (1000-1500 recommended for dense docs)
-    chunk_overlap=150    # Increase for better continuity (200-300 recommended)
+    chunk_overlap=150    # Increase for better continuity
 )
 ```
 
